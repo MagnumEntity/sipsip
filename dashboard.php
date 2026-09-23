@@ -50,13 +50,22 @@ if (isset($_SESSION['pending_water_amount'])) {
     unset($_SESSION['pending_water_amount']);
 }
 
-// Calculate bottle fill percentage (capped at 100%)
-$fill_percentage = 0;
-if ($daily_goal > 0) {
-    $fill_percentage = ($current_intake / $daily_goal) * 100;
-}
-if ($fill_percentage > 100) {
-    $fill_percentage = 100;
+// Calculate bottle fill percentage
+$actual_percentage = calculate_progress_percentage($current_intake, $daily_goal);
+$fill_percentage = $actual_percentage > 100 ? 100 : $actual_percentage;
+
+// Determine goal status
+$goal_status = '';
+$goal_message = '';
+if ($current_intake >= $daily_goal && $daily_goal > 0) {
+    if ($current_intake == $daily_goal) {
+        $goal_status = 'goal-reached';
+        $goal_message = "Congratulations! You've reached your daily goal!";
+    } else {
+        $exceeded_amount = $current_intake - $daily_goal;
+        $goal_status = 'goal-exceeded';
+        $goal_message = "Goal reached! You've exceeded your goal by {$exceeded_amount} mL.";
+    }
 }
 ?>
 
@@ -73,6 +82,12 @@ if ($fill_percentage > 100) {
     <?php if ($water_success): ?>
         <div class="error-message" style="background-color: #e8f8f5; color: var(--success-color); border-color: #d1f2eb;">
             <?php echo escape_html($water_success); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($goal_status): ?>
+        <div class="goal-status <?php echo escape_html($goal_status); ?>">
+            <?php echo escape_html($goal_message); ?>
         </div>
     <?php endif; ?>
 
@@ -93,6 +108,7 @@ if ($fill_percentage > 100) {
     <!-- 1. Progress text above the bottle -->
     <div class="progress-text">
         <?php echo escape_html($current_intake); ?> mL / <?php echo escape_html($daily_goal); ?> mL
+        <div class="progress-percent"><?php echo escape_html($actual_percentage); ?>%</div>
     </div>
 
     <!-- Bottle and Quick-Add Buttons -->

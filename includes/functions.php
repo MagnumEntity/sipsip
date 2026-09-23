@@ -60,4 +60,14 @@ function get_current_tracking_day_intake($pdo, $user_id, $reset_time_str) {
     $row = $stmt->fetch();
     return (int) $row['total'];
 }
+
+/**
+ * Calculate the progress percentage safely, avoiding division by zero.
+ */
+function calculate_progress_percentage($intake, $goal) {
+    if ($goal <= 0) {
+        return 0;
+    }
+    return round(($intake / $goal) * 100, 1);
+}
 ?>
