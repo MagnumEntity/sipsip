@@ -8,6 +8,12 @@ if (isset($_SESSION['login_error'])) {
     $error = $_SESSION['login_error'];
     unset($_SESSION['login_error']);
 }
+
+$success = '';
+if (isset($_SESSION['login_success'])) {
+    $success = $_SESSION['login_success'];
+    unset($_SESSION['login_success']);
+}
 ?>
 
 <div class="auth-container">
@@ -15,6 +21,10 @@ if (isset($_SESSION['login_error'])) {
     
     <?php if ($error): ?>
         <div class="error-message"><?php echo escape_html($error); ?></div>
+    <?php endif; ?>
+
+    <?php if ($success): ?>
+        <div class="success-message"><?php echo escape_html($success); ?></div>
     <?php endif; ?>
 
     <form action="/sipsip/actions/login.php" method="POST">
