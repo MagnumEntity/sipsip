@@ -10,7 +10,7 @@ require_once __DIR__ . '/functions.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SipSip - Water Intake Tracker</title>
-    <!-- CSS will be included here in later phases -->
+    <link rel="stylesheet" href="/sipsip/css/style.css">
 </head>
 <body>
     <header>
