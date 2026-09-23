@@ -2,10 +2,17 @@
 // actions/change_username.php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 require_login(); // Ensure user is authenticated
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /sipsip/settings.php");
+    exit;
+}
+
+if (!verify_csrf_token()) {
+    $_SESSION['username_error'] = 'Invalid session request. Please try again.';
     header("Location: /sipsip/settings.php");
     exit;
 }
@@ -20,8 +27,8 @@ if (empty($username)) {
     exit;
 }
 
-if (strlen($username) < 3 || strlen($username) > 50) {
-    $_SESSION['username_error'] = 'Username must be between 3 and 50 characters.';
+if (strlen($username) < 3 || strlen($username) > 50 || !preg_match('/^[a-zA-Z0-9_.-]+$/', $username)) {
+    $_SESSION['username_error'] = 'Username must be 3-50 characters using letters, numbers, hyphens, or underscores.';
     header("Location: /sipsip/settings.php");
     exit;
 }

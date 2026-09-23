@@ -287,4 +287,41 @@ function get_dashboard_tip($current_intake, $daily_goal, $tips_enabled) {
     $index = ($current_intake / 250) % count($tips);
     return $tips[(int)$index];
 }
+
+/**
+ * Generate or retrieve the existing CSRF token for the current session.
+ */
+function get_csrf_token() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Output a hidden HTML input field containing the CSRF token.
+ */
+function csrf_field() {
+    $token = get_csrf_token();
+    return '<input type="hidden" name="csrf_token" value="' . escape_html($token) . '">';
+}
+
+/**
+ * Verify that the submitted CSRF token matches the session token.
+ */
+function verify_csrf_token() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $token = $_POST['csrf_token'] ?? '';
+    $session_token = $_SESSION['csrf_token'] ?? '';
+
+    if (empty($token) || empty($session_token) || !hash_equals($session_token, $token)) {
+        return false;
+    }
+    return true;
+}
 ?>

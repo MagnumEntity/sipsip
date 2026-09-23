@@ -1,6 +1,19 @@
 <?php
 // actions/logout.php
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
+
+// Only allow POST to prevent CSRF-based forced logout via GET links
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /sipsip/dashboard.php");
+    exit;
+}
+
+// Verify CSRF token
+if (!verify_csrf_token()) {
+    header("Location: /sipsip/dashboard.php");
+    exit;
+}
 
 // Properly destroy/clear the authenticated session
 $_SESSION = [];

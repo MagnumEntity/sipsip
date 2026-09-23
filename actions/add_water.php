@@ -11,6 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!verify_csrf_token()) {
+    $_SESSION['water_error'] = 'Invalid session request. Please try again.';
+    header("Location: /sipsip/dashboard.php");
+    exit;
+}
+
 $user_id = get_current_user_id();
 
 // 3. Custom amount validation

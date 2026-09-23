@@ -73,6 +73,7 @@ unset($_SESSION['account_error']);
         <?php endif; ?>
 
         <form action="/sipsip/actions/change_username.php" method="POST" style="margin-bottom: 2rem;">
+            <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" value="<?php echo escape_html($user['username']); ?>" required minlength="3" maxlength="50" autocomplete="username">
@@ -90,6 +91,7 @@ unset($_SESSION['account_error']);
         <?php endif; ?>
 
         <form action="/sipsip/actions/change_password.php" method="POST">
+            <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label for="current_password">Current Password</label>
                 <input type="password" id="current_password" name="current_password" required autocomplete="current-password">
@@ -118,6 +120,7 @@ unset($_SESSION['account_error']);
         <?php endif; ?>
 
         <form action="/sipsip/actions/update_settings.php" method="POST">
+            <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label for="daily_goal_ml">Daily Water Goal (mL)</label>
                 <input type="number" id="daily_goal_ml" name="daily_goal_ml" value="<?php echo escape_html($settings['daily_goal_ml']); ?>" required min="1" step="1">
@@ -166,6 +169,7 @@ unset($_SESSION['account_error']);
         <?php endif; ?>
 
         <form action="/sipsip/actions/delete_account.php" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
+            <?php echo csrf_field(); ?>
             <div class="form-group-checkbox" style="margin-bottom: 1.2rem;">
                 <input type="checkbox" id="confirm_delete" name="confirm_delete" value="1" required>
                 <label for="confirm_delete" style="color: var(--error-color); font-weight: bold;">I understand that this action is permanent and cannot be undone.</label>

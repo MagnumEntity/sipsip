@@ -2,11 +2,18 @@
 // actions/login.php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 // Only guests can login
 require_guest();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /sipsip/login.php");
+    exit;
+}
+
+if (!verify_csrf_token()) {
+    $_SESSION['login_error'] = 'Invalid session request. Please try again.';
     header("Location: /sipsip/login.php");
     exit;
 }

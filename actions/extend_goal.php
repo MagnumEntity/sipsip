@@ -2,10 +2,17 @@
 // actions/extend_goal.php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 require_login(); // Ensure user is authenticated
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /sipsip/dashboard.php");
+    exit;
+}
+
+if (!verify_csrf_token()) {
+    $_SESSION['water_error'] = 'Invalid session request. Please try again.';
     header("Location: /sipsip/dashboard.php");
     exit;
 }

@@ -2,6 +2,7 @@
 // actions/register.php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 // Only guests can register
 require_guest();
@@ -11,12 +12,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!verify_csrf_token()) {
+    $_SESSION['register_error'] = 'Invalid session request. Please try again.';
+    header("Location: /sipsip/register.php");
+    exit;
+}
+
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// Basic validation
-if (strlen($username) < 3 || strlen($username) > 50 || empty($password) || strlen($password) < 6) {
-    $_SESSION['register_error'] = 'Invalid username or password length.';
+// Basic validation: 3-50 chars, safe characters, min 6 password
+if (strlen($username) < 3 || strlen($username) > 50 || !preg_match('/^[a-zA-Z0-9_.-]+$/', $username) || empty($password) || strlen($password) < 6) {
+    $_SESSION['register_error'] = 'Invalid username or password length/format.';
     header("Location: /sipsip/register.php");
     exit;
 }

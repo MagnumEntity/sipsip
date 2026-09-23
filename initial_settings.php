@@ -53,6 +53,7 @@ $reset_time_formatted = substr($settings['reset_time'], 0, 5);
     <?php endif; ?>
 
     <form action="/sipsip/actions/update_initial_settings.php" method="POST">
+        <?php echo csrf_field(); ?>
         <div class="form-group">
             <label for="daily_goal_ml">Daily Water Goal (mL)</label>
             <input type="number" id="daily_goal_ml" name="daily_goal_ml" value="<?php echo escape_html($settings['daily_goal_ml']); ?>" required min="1" step="1">

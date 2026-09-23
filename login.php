@@ -28,6 +28,7 @@ if (isset($_SESSION['login_success'])) {
     <?php endif; ?>
 
     <form action="/sipsip/actions/login.php" method="POST">
+        <?php echo csrf_field(); ?>
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required autocomplete="username">

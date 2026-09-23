@@ -18,6 +18,7 @@ if (isset($_SESSION['register_error'])) {
     <?php endif; ?>
 
     <form action="/sipsip/actions/register.php" method="POST">
+        <?php echo csrf_field(); ?>
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required minlength="3" maxlength="50" autocomplete="off">

@@ -2,10 +2,17 @@
 // actions/change_password.php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 
 require_login(); // Ensure user is authenticated
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /sipsip/settings.php");
+    exit;
+}
+
+if (!verify_csrf_token()) {
+    $_SESSION['password_error'] = 'Invalid session request. Please try again.';
     header("Location: /sipsip/settings.php");
     exit;
 }
@@ -59,6 +66,7 @@ try {
     $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE user_id = ?");
     $stmt->execute([$new_hash, $user_id]);
 
+    session_regenerate_id(true);
     $_SESSION['password_success'] = 'Password updated successfully.';
     header("Location: /sipsip/settings.php");
     exit;

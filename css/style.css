@@ -159,6 +159,22 @@ footer {
 .main-nav a:hover {
     background-color: var(--primary-dark);
 }
+.nav-logout-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+}
+.nav-logout-btn:hover {
+    background-color: var(--primary-dark);
+}
 
 /* Dashboard Layout */
 .dashboard-container {

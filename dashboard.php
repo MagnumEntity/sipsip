@@ -91,18 +91,22 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
                     </p>
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
                         <form action="/sipsip/actions/extend_goal.php" method="POST" style="margin: 0;">
+                            <?php echo csrf_field(); ?>
                             <input type="hidden" name="extension_amount" value="250">
                             <button type="submit" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.9rem; width: auto;">+250 mL</button>
                         </form>
                         <form action="/sipsip/actions/extend_goal.php" method="POST" style="margin: 0;">
+                            <?php echo csrf_field(); ?>
                             <input type="hidden" name="extension_amount" value="500">
                             <button type="submit" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.9rem; width: auto;">+500 mL</button>
                         </form>
                         <form action="/sipsip/actions/extend_goal.php" method="POST" style="margin: 0;">
+                            <?php echo csrf_field(); ?>
                             <input type="hidden" name="extension_amount" value="1000">
                             <button type="submit" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.9rem; width: auto;">+1000 mL</button>
                         </form>
                         <form action="/sipsip/actions/extend_goal.php" method="POST" style="display: flex; gap: 0.5rem; margin: 0; align-items: center;">
+                            <?php echo csrf_field(); ?>
                             <input type="number" name="extension_amount" placeholder="Custom mL" min="1" step="1" required style="width: 100px; padding: 0.4rem; font-size: 0.9rem; border: 1px solid var(--border-color); border-radius: 4px;">
                             <button type="submit" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.9rem; width: auto;">Extend</button>
                         </form>
@@ -130,6 +134,7 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
                 <span style="font-size: 0.9rem; color: #666;">New daily goal will be <?php echo escape_html($daily_goal + $pending_goal_extension); ?> mL.</span>
             </p>
             <form action="/sipsip/actions/extend_goal.php" method="POST" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                <?php echo csrf_field(); ?>
                 <input type="hidden" name="extension_amount" value="<?php echo escape_html($pending_goal_extension); ?>">
                 <input type="hidden" name="confirmed" value="1">
                 <a href="/sipsip/dashboard.php" class="btn" style="background-color: #95a5a6; text-decoration: none; text-align: center; width: auto; padding: 0.8rem 1.5rem;">Cancel</a>
@@ -144,6 +149,7 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
             <h3 style="text-align: center; color: var(--primary-dark); margin-top: 0;">Confirm Large Amount</h3>
             <p style="text-align: center; font-size: 1.1rem;">Add <strong><?php echo escape_html($pending_amount); ?> mL</strong> of water?</p>
             <form action="/sipsip/actions/add_water.php" method="POST" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                <?php echo csrf_field(); ?>
                 <input type="hidden" name="amount_ml" value="<?php echo escape_html($pending_amount); ?>">
                 <input type="hidden" name="confirmed" value="1">
                 <a href="/sipsip/dashboard.php" class="btn" style="background-color: #95a5a6; text-decoration: none; text-align: center; width: auto; padding: 0.8rem 1.5rem;">Cancel</a>
@@ -162,6 +168,7 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
     <div class="bottle-container">
         <!-- Left quick-add button -->
         <form action="/sipsip/actions/add_water.php" method="POST">
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="amount_ml" value="<?php echo escape_html($button_1); ?>">
             <button class="quick-add-btn" type="submit">
                 +<?php echo escape_html($button_1); ?> mL
@@ -175,6 +182,7 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
 
         <!-- Right quick-add button -->
         <form action="/sipsip/actions/add_water.php" method="POST">
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="amount_ml" value="<?php echo escape_html($button_2); ?>">
             <button class="quick-add-btn" type="submit">
                 +<?php echo escape_html($button_2); ?> mL
@@ -184,6 +192,7 @@ $tip = get_dashboard_tip($current_intake, $daily_goal, $tips_enabled);
 
     <!-- 6. Custom water amount input below the bottle/buttons -->
     <form action="/sipsip/actions/add_water.php" method="POST" class="custom-amount-form">
+        <?php echo csrf_field(); ?>
         <input type="number" id="custom_amount_ml" name="amount_ml" placeholder="Custom amount (mL)" min="1" step="1" required>
         <button type="submit" class="btn">Add Water</button>
     </form>
