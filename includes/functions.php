@@ -70,4 +70,71 @@ function calculate_progress_percentage($intake, $goal) {
     }
     return round(($intake / $goal) * 100, 1);
 }
+
+/**
+ * Fetch history and calculate streak.
+ * Returns an array: ['history' => [...], 'streak' => int]
+ */
+function get_user_history_and_streak($pdo, $user_id, $reset_time, $daily_goal) {
+    // 1. Fetch grouped history
+    $stmt = $pdo->prepare("
+        SELECT 
+            DATE(SUBTIME(recorded_at, ?)) AS tracking_date, 
+            SUM(amount_ml) AS total_intake
+        FROM water_intake_records
+        WHERE user_id = ?
+        GROUP BY tracking_date
+        ORDER BY tracking_date DESC
+    ");
+    $stmt->execute([$reset_time, $user_id]);
+    $rows = $stmt->fetchAll();
+
+    $history = [];
+    foreach ($rows as $row) {
+        $row_date = $row['tracking_date'];
+        $row_intake = (int) $row['total_intake'];
+        $reached = $row_intake >= $daily_goal;
+        
+        $history[] = [
+            'date' => $row_date,
+            'intake' => $row_intake,
+            'goal' => $daily_goal,
+            'reached' => $reached
+        ];
+    }
+
+    // 2. Calculate Streak
+    $bounds = get_tracking_day_bounds($reset_time);
+    $current_tracking_date = substr($bounds['start'], 0, 10);
+    
+    $streak = 0;
+    $expected_date = $current_tracking_date;
+    $history_map = array_column($history, null, 'date');
+
+    // Check current day
+    if (isset($history_map[$expected_date]) && $history_map[$expected_date]['reached']) {
+        $streak++;
+    }
+
+    // Step backwards day by day
+    $expected_date_obj = new DateTime($current_tracking_date, new DateTimeZone('Asia/Manila'));
+    $expected_date_obj->modify('-1 day');
+    $expected_date = $expected_date_obj->format('Y-m-d');
+
+    while (true) {
+        if (isset($history_map[$expected_date]) && $history_map[$expected_date]['reached']) {
+            $streak++;
+            $expected_date_obj->modify('-1 day');
+            $expected_date = $expected_date_obj->format('Y-m-d');
+        } else {
+            // Missing day or goal not reached genuinely breaks the streak
+            break;
+        }
+    }
+
+    return [
+        'history' => $history,
+        'streak' => $streak
+    ];
+}
 ?>
