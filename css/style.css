@@ -174,10 +174,45 @@ footer {
 .notifications-area, .tips-area {
     width: 100%;
     background-color: var(--white);
-    padding: 1rem;
+    padding: 1rem 2.5rem 1rem 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     border-left: 4px solid var(--primary-color);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.notifications-area.goal-reached {
+    background-color: #d4edda;
+    color: #155724;
+    border-left-color: var(--success-color);
+    animation: celebrate 0.5s ease-in-out;
+}
+
+.notifications-area.goal-exceeded {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left-color: #f39c12;
+}
+
+.dismiss-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: #888;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dismiss-btn:hover {
+    color: #333;
+    background-color: rgba(0,0,0,0.05);
 }
 
 .progress-text {

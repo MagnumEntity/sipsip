@@ -206,4 +206,85 @@ function get_user_statistics($pdo, $user_id, $reset_time, $daily_goal) {
         'streak' => $data['streak']
     ];
 }
+
+/**
+ * Generate context-aware in-app notification based on current intake and goal.
+ */
+function get_dashboard_notification($current_intake, $daily_goal, $notifications_enabled) {
+    if (!$notifications_enabled) {
+        return null;
+    }
+
+    $remaining = $daily_goal - $current_intake;
+    $exceeded = $current_intake - $daily_goal;
+
+    if ($current_intake > $daily_goal) {
+        return [
+            'type' => 'over_goal',
+            'message' => "You've exceeded your daily goal by {$exceeded} mL!",
+            'exceeded_amount' => $exceeded,
+            'class' => 'goal-exceeded'
+        ];
+    }
+
+    if ($current_intake === $daily_goal && $daily_goal > 0) {
+        return [
+            'type' => 'goal_reached',
+            'message' => "Goal reached! Great job staying on track today!",
+            'class' => 'goal-reached'
+        ];
+    }
+
+    if ($remaining === 100) {
+        return [
+            'type' => 'close_100',
+            'message' => "You're almost there! 100 mL away!",
+            'class' => 'goal-info'
+        ];
+    }
+
+    if ($remaining === 500) {
+        return [
+            'type' => 'close_500',
+            'message' => "You're 500 mL away from your goal!",
+            'class' => 'goal-info'
+        ];
+    }
+
+    // Far behind (e.g. remaining > 500)
+    if ($remaining > 500) {
+        return [
+            'type' => 'far_behind',
+            'message' => "Keep going! Stay hydrated and work toward your daily goal.",
+            'class' => 'goal-info'
+        ];
+    }
+
+    // Default encouragement for other remaining amounts
+    return [
+        'type' => 'in_progress',
+        'message' => "Keep it up! {$remaining} mL remaining to reach today's goal.",
+        'class' => 'goal-info'
+    ];
+}
+
+/**
+ * Generate context-aware hydration tip.
+ */
+function get_dashboard_tip($current_intake, $daily_goal, $tips_enabled) {
+    if (!$tips_enabled) {
+        return null;
+    }
+
+    $tips = [
+        "Try taking small sips throughout the day.",
+        "Keeping your water nearby can make regular hydration easier.",
+        "A quick water break can help you stay consistent with your daily goal.",
+        "You're making progress toward today's goal!",
+        "Drinking a glass of water when you wake up is a great way to start your day."
+    ];
+
+    $index = ($current_intake / 250) % count($tips);
+    return $tips[(int)$index];
+}
 ?>
