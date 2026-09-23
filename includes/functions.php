@@ -137,4 +137,73 @@ function get_user_history_and_streak($pdo, $user_id, $reset_time, $daily_goal) {
         'streak' => $streak
     ];
 }
+
+/**
+ * Fetch and calculate user statistics for Day, Week, and Month views.
+ */
+function get_user_statistics($pdo, $user_id, $reset_time, $daily_goal) {
+    $data = get_user_history_and_streak($pdo, $user_id, $reset_time, $daily_goal);
+    $history_map = array_column($data['history'], null, 'date');
+    
+    $bounds = get_tracking_day_bounds($reset_time);
+    $current_tracking_date = substr($bounds['start'], 0, 10);
+    
+    // Day Stats
+    $day_intake = isset($history_map[$current_tracking_date]) ? $history_map[$current_tracking_date]['intake'] : 0;
+    
+    // Helper to calculate stats for N days
+    $calc_period = function($num_days) use ($history_map, $current_tracking_date, $daily_goal) {
+        $total_intake = 0;
+        $days_reached = 0;
+        $graph_data = [];
+        
+        $date_obj = new DateTime($current_tracking_date, new DateTimeZone('Asia/Manila'));
+        
+        $dates = [];
+        for ($i = 0; $i < $num_days; $i++) {
+            $dates[] = $date_obj->format('Y-m-d');
+            $date_obj->modify('-1 day');
+        }
+        $dates = array_reverse($dates);
+        
+        foreach ($dates as $date) {
+            $intake = isset($history_map[$date]) ? $history_map[$date]['intake'] : 0;
+            $reached = $intake >= $daily_goal;
+            
+            $total_intake += $intake;
+            if ($reached) {
+                $days_reached++;
+            }
+            
+            $graph_data[] = [
+                'date' => $date,
+                'intake' => $intake,
+                'goal' => $daily_goal
+            ];
+        }
+        
+        $average = $total_intake / $num_days;
+        $achievement_rate = ($days_reached / $num_days) * 100;
+        
+        return [
+            'total' => $total_intake,
+            'average' => round($average, 1),
+            'days_reached' => $days_reached,
+            'total_days' => $num_days,
+            'achievement_rate' => round($achievement_rate, 1),
+            'graph_data' => $graph_data
+        ];
+    };
+    
+    return [
+        'day' => [
+            'intake' => $day_intake,
+            'goal' => $daily_goal,
+            'progress' => calculate_progress_percentage($day_intake, $daily_goal)
+        ],
+        'week' => $calc_period(7),
+        'month' => $calc_period(30),
+        'streak' => $data['streak']
+    ];
+}
 ?>

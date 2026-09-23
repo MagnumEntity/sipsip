@@ -330,3 +330,119 @@ footer {
     color: #666;
     margin-top: 0.5rem;
 }
+
+/* Statistics */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Simple CSS Graph */
+.graph-container {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.graph-wrapper {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    gap: 5px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    overflow-x: auto;
+}
+
+.graph-bar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    min-width: 20px;
+    position: relative;
+}
+
+.graph-bar {
+    width: 100%;
+    max-width: 40px;
+    background-color: #95a5a6;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s;
+    position: relative;
+}
+
+.graph-bar.reached {
+    background-color: var(--primary-color);
+}
+
+.graph-label {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.graph-goal-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed #f39c12;
+    z-index: 1;
+}
+
+/* Tabs */
+.stats-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.stats-tab {
+    padding: 0.5rem 1rem;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+}
+.stats-tab.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
